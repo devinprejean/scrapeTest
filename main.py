@@ -7,6 +7,22 @@ headers = {'User-Agent': user_agent}
 response = requests.get(my_url,headers=headers)
 html = response.content
 page = soup(html, "html.parser")
+
+f = open("scrapedData.csv", "w")
+headers = "Country,Capital,Population,Area \n"
+
+f.write(headers)
 countries = page.find_all('div', {'class': 'country'})
-print(countries)
+
+for country in countries:
+    capital = country.find('span', {'class': 'country-capital'}).text
+    print(capital)
+    population = country.find('span', {'class': 'country-population'}).text
+    #print(population)
+    area = country.find('span', {'class': 'country-area'}).text
+    #print(country.h3.text.strip() + "," + capital + "," + population + "," + area + "\n")
+    f.write(country.h3.text.strip() + "," + capital.replace('\u015f', 's').replace('\u0103', 'a') + "," + population + "," + area + "\n")
+
+f.close()
+print("done!")
 
